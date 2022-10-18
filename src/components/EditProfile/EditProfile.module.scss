@@ -1,0 +1,40 @@
+.wrapper{
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 384px;
+  height: 600px;
+  background: white;
+  box-shadow: 0 0 15px 6px rgba(34, 60, 80, 0.2);
+
+}
+
+.title{
+  margin-top: 41px;
+}
+
+.text{
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.usermane,.email,.password,.image{
+ width: 320px;
+  height: 40px;
+  margin-bottom: 30px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+
+}
+
+.button{
+  width: 320px;
+  height: 40px;
+  background-color: #1890FF;
+  border: none;
+  margin-top: 21px;
+  margin-bottom: 8px;
+  color: white;
+  border-radius: 4px;
+}

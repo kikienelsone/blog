@@ -1,0 +1,78 @@
+.wrapper{
+  margin: auto;
+  width: 938px;
+  height: 746px;
+  background: white;
+  box-shadow: 0 0 15px 6px rgba(34, 60, 80, 0.2);
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.title{
+  margin-top: 48px;
+}
+
+.text{
+  margin-bottom: 0;
+}
+
+.inputTitle,.inputDescription,.inputText{
+  width: 874px;
+  height: 40px;
+  margin-bottom: 21px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+
+.inputText{
+  height: 184px;
+
+}
+
+.tags{
+  margin-left: 32px;
+}
+
+.inputTag{
+  width: 300px;
+  height: 40px;
+  margin-right: 17px;
+  margin-bottom: 5px;
+}
+
+.buttonDelete{
+  width: 120px;
+  height: 40px;
+  background: white;
+  border: 1px solid red;
+  border-radius: 4px;
+  color: red;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.buttonAddTag{
+  width: 136px;
+  height: 40px;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #1890FF;
+  color: #1890FF;
+}
+
+.buttonSend{
+  width: 319px;
+  height: 40px;
+  background: #1890FF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-left: 32px;
+  margin-top: 21px;
+}
