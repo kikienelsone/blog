@@ -1,18 +1,30 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from 'antd/lib/button';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { getCurrentUser } from '../../store/Requests';
+import { getCurrentUser, getPosts } from '../../store/Requests';
+import { removeAuth } from '../../store/DataSlice';
 
 import img from './3099451_cat_face_kissing_icon.png';
 import navBarProfile from './NavBarProfile.module.scss';
 
 export const NavBarProfile: React.FC = () => {
   const user = useAppSelector((state) => state.dataSlice.users);
-  const username = localStorage.getItem('username');
+  const userName = localStorage.getItem('username');
+  const image = localStorage.getItem('image');
+  console.log(user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, []);
 
+  const logOut = () => {
+    dispatch(removeAuth());
+    getPosts();
+    navigate('/');
+  };
   return (
     <div>
       <div className={navBarProfile.wrapper}>
@@ -24,11 +36,11 @@ export const NavBarProfile: React.FC = () => {
             Create Article
           </Button>
         </Link>
-        Hello {username}
-        <Link to="/post/profile">
-          {<img onClick={() => dispatch(getCurrentUser())} className={navBarProfile.img} src={img} alt="cat" />}
-        </Link>
-        <Button className={navBarProfile.button}>Log Out</Button>
+        Hello {userName}
+        <Link to="/post/profile">{<img className={navBarProfile.img} src={image ? image : img} alt="pic" />}</Link>
+        <Button onClick={() => logOut()} className={navBarProfile.button}>
+          Log Out
+        </Button>
       </div>
     </div>
   );

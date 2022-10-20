@@ -2,10 +2,13 @@ import React from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { NavBarProfile } from '../NavBarProfile/NavBarProfile';
 import { useAppDispatch } from '../../hooks/hooks';
-import { createNewPost } from '../../store/Requests';
+import { createNewPost, getPosts } from '../../store/Requests';
+// eslint-disable-next-line import/namespace
+import { createPostSchema } from '../Schema';
 
 import create from './CreatePost.module.scss';
 
@@ -19,15 +22,23 @@ type Post = {
 export const CreatePost: React.FC = () => {
   const tagsArr = [];
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Post>();
+  } = useForm<Post>({ resolver: yupResolver(createPostSchema) });
+  const createPost = (data: any) => {
+    dispatch(createNewPost(data)).then(() => {
+      dispatch(getPosts());
+      navigate('/');
+    });
+  };
   const onSubmit: SubmitHandler<Post> = (data) => {
+    createPost(data);
     console.log(data);
-    dispatch(createNewPost(data));
   };
   return (
     <div className={create.wrapper}>
@@ -36,18 +47,19 @@ export const CreatePost: React.FC = () => {
           <h2 className={create.title}>Create new article</h2>
           <label>
             <p className={create.text}>Title</p>
-            <input className={create.inputTitle} defaultValue="" {...register('title')} />
+            <input className={create.inputTitle} defaultValue="" {...register('title', { required: true })} />
           </label>
-
+          {errors.title?.message}
           <label>
             <p className={create.text}>Short description</p>
             <input className={create.description} defaultValue="" {...register('description')} />
           </label>
-
+          {errors.description?.message}
           <label>
             <p className={create.text}>Text</p>
             <textarea className={create.inputText} defaultValue="" {...register('body')} />
           </label>
+          {errors.body?.message}
         </div>
 
         <div className={create.wrapperTags}>

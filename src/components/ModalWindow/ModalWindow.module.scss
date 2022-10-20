@@ -1,0 +1,45 @@
+.wrapper{
+  width: 246px;
+  height: 104px;
+  background: white;
+  box-shadow: 0 0 15px 6px rgba(34, 60, 80, 0.2);
+  position: absolute;
+  margin-top: 15px;
+  margin-left: 35px;
+}
+
+.textWrapper{
+width: 208px;
+  height: 44px;
+  margin-left: 15px;
+  margin-top: 11px;
+}
+
+.omg{
+  margin-right: 10px;
+}
+
+.btnsWrapper{
+  margin-left: 120px;
+  margin-top: 11px;
+}
+
+.buttonNo,.buttonYes{
+  background: white;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+
+.buttonNo{
+  margin-right: 15px;
+}
+
+.buttonNo:focus{
+  background: #1890FF;
+  color: white;
+}
+
+.buttonYes:focus{
+  background: #1890FF;
+  color: white;
+}

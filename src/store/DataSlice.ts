@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { any } from 'prop-types';
 
 import { ArticlesDataInterfaces } from '../interfaces/ArticlesDataInterfaces';
 
@@ -6,6 +7,7 @@ import {
   createNewPost,
   deletePost,
   editPost,
+  editProfile,
   getCurrentUser,
   getOnePosts,
   getPosts,
@@ -17,31 +19,38 @@ import {
 export interface UsersInterface {
   username: string;
   email: string;
-  token: string;
+  // token: string;
+  image?: string;
 }
 
 interface DataInterface {
   data: ArticlesDataInterfaces[];
   post: any;
+  deletePost: any;
+  newPost: any;
+  editPost: any;
   users: UsersInterface | null;
   loading: boolean;
   isAuth: boolean;
   logout: boolean;
-  deletePosts: any;
-  editPosts: any;
   newUser: any;
+  likes: number;
+  modal: boolean;
 }
 
 const initialState: DataInterface = {
   data: [],
   post: [],
+  deletePost: [],
+  editPost: [],
+  newPost: [],
   users: null,
   loading: true,
   isAuth: false,
   logout: false,
-  deletePosts: [],
-  editPosts: [],
   newUser: null,
+  modal: false,
+  likes: 0,
 };
 
 export const dataSlice = createSlice({
@@ -50,6 +59,24 @@ export const dataSlice = createSlice({
   reducers: {
     setAuth(state) {
       state.isAuth = true;
+    },
+    removeAuth(state) {
+      state.isAuth = false;
+      localStorage.clear();
+    },
+
+    openWindow(state) {
+      state.modal = true;
+    },
+
+    closeWindow(state) {
+      state.modal = false;
+    },
+
+    like(state, action) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      state.likes = action + 1;
     },
   },
   extraReducers: (builder) => {
@@ -72,18 +99,21 @@ export const dataSlice = createSlice({
         state.users = action.payload;
       })
       .addCase(createNewPost.fulfilled, (state, action) => {
-        state.post = action.payload;
+        state.newPost = action.payload;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        state.deletePosts = action.payload;
+        state.deletePost = action.payload;
       })
       .addCase(editPost.fulfilled, (state, action) => {
-        state.post = action.payload;
+        state.editPost = action.payload;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.newUser = action.payload;
+        state.users = action.payload;
+      })
+      .addCase(editProfile.fulfilled, (state, action) => {
+        state.users = action.payload;
       });
   },
 });
 export default dataSlice.reducer;
-export const { setAuth } = dataSlice.actions;
+export const { setAuth, removeAuth, like, openWindow, closeWindow } = dataSlice.actions;

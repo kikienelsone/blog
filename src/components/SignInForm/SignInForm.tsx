@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-import { NavBar } from '../NavBar/NavBar';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { loginNewUser } from '../../store/Requests';
-import { NavBarProfile } from '../NavBarProfile/NavBarProfile';
-import { setAuth } from '../../store/DataSlice';
+import { getPosts, loginNewUser } from '../../store/Requests';
+import { removeAuth, setAuth } from '../../store/DataSlice';
 
 import signin from './SignInForm.module.scss';
 
@@ -16,6 +16,8 @@ type Inputs = {
 };
 export const SignInForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const token = localStorage.getItem('token');
   const {
     register,
@@ -23,11 +25,19 @@ export const SignInForm: React.FC = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
+
+  const login = (data: any) => {
+    dispatch(loginNewUser(data)).then(() => {
+      if (token) {
+        dispatch(setAuth());
+      }
+      dispatch(getPosts());
+    });
+
+    navigate('/');
+  };
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    dispatch(loginNewUser(data));
-    if (token) {
-      dispatch(setAuth());
-    }
+    login(data);
   };
   return (
     <>
@@ -38,16 +48,14 @@ export const SignInForm: React.FC = () => {
           <p className={signin.text}>Email address</p>
           <input className={signin.email} defaultValue="" {...register('email')} />
         </label>
+        {/*{errors.email?.message}*/}
 
         <label>
           <p className={signin.text}>password</p>
           <input className={signin.password} defaultValue="" {...register('password', { required: true })} />
         </label>
-        {errors.email && <span>Can not be empty</span>}
-        {errors.password && <span>Passwords must match</span>}
-        {/*<Link to="/">*/}
+        {/*{errors.password?.message}*/}
         <input className={signin.button} type="submit" value="Login" />
-        {/*</Link>*/}
         <span>
           Don’t have an account?
           <Link className={signin.link} to="/signup">

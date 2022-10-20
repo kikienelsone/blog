@@ -6,13 +6,13 @@ import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { Authors } from '../Authors/Authors';
 import { Tags } from '../Tags/Tags';
 import { getOnePosts, pagination } from '../../store/Requests';
-import { NavBar } from '../NavBar/NavBar';
-import { NavBarProfile } from '../NavBarProfile/NavBarProfile';
+import { like } from '../../store/DataSlice';
 
 import list from './PostList.module.scss';
 const PostList: React.FC = () => {
   const dispatch = useAppDispatch();
   const postList = useAppSelector((state) => state.dataSlice.data);
+  const likes = useAppSelector((state) => state.dataSlice.likes);
   return (
     <>
       <ul className={list.wrapper}>
@@ -30,8 +30,12 @@ const PostList: React.FC = () => {
                     {item.title}
                   </span>
                 </Link>
-                <span className={list.likes}>&#9825;</span>
-                <span className={list.count}>{item.favoritesCount}</span>
+                <span onClick={() => dispatch(like(item.favoritesCount))} className={list.likes}>
+                  &#9825;
+                </span>
+                <span onClick={() => console.log('t')} className={list.count}>
+                  {item.favoritesCount}
+                </span>
                 <Tags tags={item.tagList} />
                 <p className={list.description}>{item.description}</p>
               </div>

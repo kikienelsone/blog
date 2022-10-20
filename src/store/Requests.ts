@@ -20,6 +20,7 @@ export const registerNewUser = createAsyncThunk('data/registerNewUser', async (u
       throw new Error('smth');
     }
     const users = await response.json();
+    localStorage.setItem('token', users.user.token);
     localStorage.setItem('username', users.user.username);
     return users.user;
   } catch (e) {
@@ -50,6 +51,38 @@ export const editPost = createAsyncThunk('post/editPost', async (slug: any) => {
   }
 });
 
+export const editProfile = createAsyncThunk('post/editProfile', async (data: any) => {
+  const token = localStorage.getItem('token');
+  const { username, email, password, image } = data;
+  try {
+    const res = await fetch('https://blog.kata.academy/api/user', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        user: {
+          username,
+          email,
+          password,
+          image,
+        },
+      }),
+    });
+    if (!res.ok) {
+      throw new Error('smth');
+    }
+    const users = await res.json();
+    localStorage.setItem('username', users.user.username);
+    localStorage.setItem('image', users.user.image);
+
+    return users;
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 export const getCurrentUser = createAsyncThunk('user/getCurrentUser', async () => {
   const token = localStorage.getItem('token');
   try {
@@ -59,8 +92,8 @@ export const getCurrentUser = createAsyncThunk('user/getCurrentUser', async () =
         Authorization: `Bearer ${token}`,
       },
     });
-    const currentUser = response.json();
-    console.log(currentUser);
+    const currentUser = await response.json();
+    return currentUser.user;
   } catch (e) {
     console.log(e);
   }

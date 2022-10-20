@@ -1,9 +1,10 @@
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-import { NavBarProfile } from '../NavBarProfile/NavBarProfile';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { editPost } from '../../store/Requests';
+import { editPost, getPosts } from '../../store/Requests';
 
 import edit from './EditPost.module.scss';
 
@@ -15,6 +16,8 @@ type Post = {
 };
 export const EditPost: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const posts = useAppSelector((state) => state.dataSlice.post);
   const {
     register,
@@ -22,9 +25,15 @@ export const EditPost: React.FC = () => {
     watch,
     formState: { errors },
   } = useForm<Post>();
+
+  const editCurrentPost = (data: any) => {
+    dispatch(editPost({ postSlug: posts.slug, postData: data })).then(() => {
+      dispatch(getPosts());
+      navigate('/');
+    });
+  };
   const onSubmit: SubmitHandler<Post> = (data) => {
-    console.log(data);
-    dispatch(editPost({ postSlug: posts.slug, postData: data }));
+    editCurrentPost(data);
   };
   return (
     <div>
@@ -33,18 +42,21 @@ export const EditPost: React.FC = () => {
           <h2 className={edit.title}>Edit article</h2>
           <label>
             <p className={edit.text}>Title</p>
-            <input className={edit.inputTitle} defaultValue="" {...register('title')} />
+            <input className={edit.inputTitle} defaultValue="" {...register('title', { required: true })} />
           </label>
+          {errors.title?.message}
 
           <label>
             <p className={edit.text}>Short description</p>
             <input className={edit.inputDescription} defaultValue="" {...register('description')} />
           </label>
+          {errors.description?.message}
 
           <label>
             <p className={edit.text}>Text</p>
             <textarea className={edit.inputText} defaultValue="" {...register('body')} />
           </label>
+          {errors.body?.message}
         </section>
 
         <section className={edit.tags}>

@@ -3,7 +3,7 @@ import { Alert, Spin } from 'antd';
 import 'antd/dist/antd.css';
 import { Route, Routes } from 'react-router';
 
-import { getPosts } from '../../store/Requests';
+import { getCurrentUser, getPosts } from '../../store/Requests';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import PostList from '../PostsList/PostList';
 import { Post } from '../Post/Post';
@@ -12,8 +12,7 @@ import { SignInForm } from '../SignInForm/SignInForm';
 import { EditProfile } from '../EditProfile/EditProfile';
 import { CreatePost } from '../CreatePost/CreatePost';
 import { EditPost } from '../EditPost/EditPost';
-import { NavBarProfile } from '../NavBarProfile/NavBarProfile';
-import { NavBar } from '../NavBar/NavBar';
+import { Header } from '../Header/Header';
 
 import app from './App.module.scss';
 
@@ -21,10 +20,10 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getPosts());
+    // dispatch(getCurrentUser());
   }, []);
 
   const load = useAppSelector((state) => state.dataSlice.loading);
-  const isAuth = useAppSelector((state) => state.dataSlice.isAuth);
 
   const loadingPostList = load ? (
     <Spin tip="Loading...">
@@ -42,8 +41,7 @@ const App: React.FC = () => {
   );
   return (
     <div className={app.app}>
-      {isAuth ? <NavBarProfile /> : <NavBar />}
-
+      <Header />
       <Routes>
         <Route path="/" element={loadingPostList} />
         <Route path="/post/:slug" element={loadingPost} />

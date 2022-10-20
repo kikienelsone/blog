@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import { NavBar } from '../NavBar/NavBar';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
@@ -16,6 +17,7 @@ type Inputs = {
 };
 export const SignUpForm: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const users = useAppSelector((state) => state.dataSlice.users);
   console.log(users);
 
@@ -27,7 +29,9 @@ export const SignUpForm: React.FC = () => {
   } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
-    dispatch(registerNewUser(data)).then();
+    dispatch(registerNewUser(data)).then(() => {
+      navigate('/signin');
+    });
   };
 
   // console.log(watch('username')); // watch input value by passing the name of it
@@ -39,24 +43,23 @@ export const SignUpForm: React.FC = () => {
           <p className={signUp.text}>Username</p>
           <input className={signUp.username} defaultValue="" {...register('username')} />
         </label>
-
+        {/*{errors.username?.message}*/}
         <label>
           <p className={signUp.text}>Email address</p>
           <input className={signUp.email} defaultValue="" {...register('email')} />
         </label>
-
+        {/*{errors.email?.message}*/}
         <label>
           <p className={signUp.text}>password</p>
           <input className={signUp.password} defaultValue="" {...register('password', { required: true })} />
         </label>
-
+        {/*{errors.password?.message}*/}
         <label>
           <p className={signUp.text}>repeat password</p>
           <input className={signUp.repeat} defaultValue="" {...register('repeat', { required: true })} />
         </label>
 
-        {/*{errors['repeat password'] && <span>Passwords must match</span>}*/}
-        {errors.password && <span>Your password needs to be at least 6 characters.</span>}
+        {/*{errors.password?.message}*/}
 
         <input className={signUp.button} type="submit" value="Create" />
         <span>

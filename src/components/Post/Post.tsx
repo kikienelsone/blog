@@ -15,6 +15,7 @@ export const Post: React.FC = () => {
   const { slug } = useParams();
   const post = useAppSelector((state) => state.dataSlice.post);
   const isAuth = useAppSelector((state) => state.dataSlice.isAuth);
+  const user = useAppSelector((state) => state.dataSlice.users);
   const username = localStorage.getItem('username');
   const dispatch = useAppDispatch();
 
@@ -24,8 +25,6 @@ export const Post: React.FC = () => {
 
   return (
     <>
-      {/*{isAuth ? <NavBarProfile /> : <NavBar />}*/}
-
       <div className={postStyle.wrapper}>
         <li className={postStyle.items}>
           <div className={postStyle.content}>
