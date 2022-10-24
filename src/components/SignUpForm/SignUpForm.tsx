@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { NavBar } from '../NavBar/NavBar';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { registerNewUser } from '../../store/Requests';
+import { createProfileSchema } from '../Schema';
 
-import signUp from './SignUpForm.module.scss';
+import styles from './SignUpForm.module.scss';
 
 type Inputs = {
   username: string;
@@ -24,47 +24,44 @@ export const SignUpForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({ resolver: yupResolver(createProfileSchema) });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
     dispatch(registerNewUser(data)).then(() => {
       navigate('/signin');
     });
   };
-
-  // console.log(watch('username')); // watch input value by passing the name of it
   return (
     <>
-      <form className={signUp.wrapper} onSubmit={handleSubmit(onSubmit)}>
-        <h2 className={signUp.title}>Create new account</h2>
+      <form className={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
+        <h2 className={styles.title}>Create new account</h2>
         <label>
-          <p className={signUp.text}>Username</p>
-          <input className={signUp.username} defaultValue="" {...register('username')} />
+          <p className={styles.text}>Username</p>
+          <input className={styles.username} defaultValue="" {...register('username')} />
         </label>
-        {/*{errors.username?.message}*/}
+        {errors.username?.message}
         <label>
-          <p className={signUp.text}>Email address</p>
-          <input className={signUp.email} defaultValue="" {...register('email')} />
+          <p className={styles.text}>Email address</p>
+          <input className={styles.email} defaultValue="" {...register('email')} />
         </label>
-        {/*{errors.email?.message}*/}
+        {errors.email?.message}
         <label>
-          <p className={signUp.text}>password</p>
-          <input className={signUp.password} defaultValue="" {...register('password', { required: true })} />
+          <p className={styles.text}>password</p>
+          <input className={styles.password} defaultValue="" {...register('password')} />
         </label>
-        {/*{errors.password?.message}*/}
+        {errors.password?.message}
         <label>
-          <p className={signUp.text}>repeat password</p>
-          <input className={signUp.repeat} defaultValue="" {...register('repeat', { required: true })} />
+          <p className={styles.text}>repeat password</p>
+          <input className={styles.repeat} defaultValue="" {...register('repeat')} />
         </label>
 
-        {/*{errors.password?.message}*/}
+        {errors.password?.message}
 
-        <input className={signUp.button} type="submit" value="Create" />
+        <input className={styles.button} type="submit" value="Create" />
         <span>
           Already have an account?
-          <Link className={signUp.link} to="/signin">
+          <Link className={styles.link} to="/signin">
             Sign In
           </Link>
         </span>

@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { getPosts, loginNewUser } from '../../store/Requests';
 import { removeAuth, setAuth } from '../../store/DataSlice';
+import { loginProfileSchema } from '../Schema';
 
 import signin from './SignInForm.module.scss';
 
@@ -24,7 +25,7 @@ export const SignInForm: React.FC = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({ resolver: yupResolver(loginProfileSchema) });
 
   const login = (data: any) => {
     dispatch(loginNewUser(data)).then(() => {
@@ -48,13 +49,13 @@ export const SignInForm: React.FC = () => {
           <p className={signin.text}>Email address</p>
           <input className={signin.email} defaultValue="" {...register('email')} />
         </label>
-        {/*{errors.email?.message}*/}
+        {errors.email?.message}
 
         <label>
           <p className={signin.text}>password</p>
           <input className={signin.password} defaultValue="" {...register('password', { required: true })} />
         </label>
-        {/*{errors.password?.message}*/}
+        {errors.password?.message}
         <input className={signin.button} type="submit" value="Login" />
         <span>
           Don’t have an account?

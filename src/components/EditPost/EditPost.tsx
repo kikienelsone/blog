@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { editPost, getPosts } from '../../store/Requests';
+import { editPostSchema } from '../Schema';
 
-import edit from './EditPost.module.scss';
+import styles from './EditPost.module.scss';
 
 type Post = {
   title: string;
   description: string;
   body: string;
-  tags: [string];
 };
 export const EditPost: React.FC = () => {
+  const posts = useAppSelector((state) => state.dataSlice.post);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [input, setInput] = useState(posts);
+  const [value, setValue] = useState('');
 
-  const posts = useAppSelector((state) => state.dataSlice.post);
+  const [tags, setTags] = useState(posts.tagList);
+
+  // console.log('state.dataSlice.post', posts.tagList);
   const {
     register,
     handleSubmit,
@@ -32,47 +38,96 @@ export const EditPost: React.FC = () => {
       navigate('/');
     });
   };
+
+  const inputValue = (event: any) => {
+    setValue(event.target.value);
+  };
+
+  const addTag = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setTags([...tags, value]);
+    setValue('');
+  };
+  const result =
+    tags &&
+    tags.map((item: string) => (
+      <div key={Math.random() * 42}>
+        <input className={styles.tags} value={item} disabled={true}></input>
+
+        <button className={styles.buttonDelete}>delete</button>
+      </div>
+    ));
+
   const onSubmit: SubmitHandler<Post> = (data) => {
-    editCurrentPost(data);
+    const a = {
+      ...data,
+      tagList: tags,
+    };
+    editCurrentPost(a);
   };
   return (
     <div>
-      <form className={edit.wrapper} onSubmit={handleSubmit(onSubmit)}>
-        <section className={edit.content}>
-          <h2 className={edit.title}>Edit article</h2>
+      <form className={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
+        <section className={styles.content}>
+          <h2 className={styles.title}>Edit article</h2>
           <label>
-            <p className={edit.text}>Title</p>
-            <input className={edit.inputTitle} defaultValue="" {...register('title', { required: true })} />
+            <p className={styles.text}>Title</p>
+            <input
+              onClick={() => setInput('')}
+              value={input.title}
+              // defaultValue={posts?.title}
+              className={styles.inputTitle}
+              {...register('title')}
+            />
           </label>
           {errors.title?.message}
 
           <label>
-            <p className={edit.text}>Short description</p>
-            <input className={edit.inputDescription} defaultValue="" {...register('description')} />
+            <p className={styles.text}>Short description</p>
+            <input
+              onClick={() => setInput('')}
+              value={input.description}
+              className={styles.inputDescription}
+              {...register('description')}
+            />
           </label>
           {errors.description?.message}
 
           <label>
-            <p className={edit.text}>Text</p>
-            <textarea className={edit.inputText} defaultValue="" {...register('body')} />
+            <p className={styles.text}>Text</p>
+            <textarea value={input.body} className={styles.inputText} {...register('body')} />
           </label>
           {errors.body?.message}
         </section>
 
-        <section className={edit.tags}>
+        <section className={styles.tags}>
           <div>
-            <p className={edit.text}>Tags</p>
+            <span className={styles.text}>Tags</span>
           </div>
+          <div>{result}</div>
 
-          <div>
-            <label>
-              <input className={edit.inputTag} defaultValue="" {...register('tags')} />
-              <button className={edit.buttonDelete}>Delete</button>
-              <button className={edit.buttonAddTag}>Add tag</button>
-            </label>
-          </div>
+          <input onInput={(event) => inputValue(event)} value={value} className={styles.tags} />
+
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+            }}
+            className={styles.buttonDelete}
+          >
+            Delete
+          </button>
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              addTag();
+            }}
+            className={styles.buttonAddTag}
+          >
+            Add tag
+          </button>
         </section>
-        <input className={edit.buttonSend} type="submit" value="Send" />
+        <input className={styles.buttonSend} type="submit" value="Send" />
       </form>
     </div>
   );

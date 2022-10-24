@@ -13,7 +13,6 @@ export const NavBarProfile: React.FC = () => {
   const user = useAppSelector((state) => state.dataSlice.users);
   const userName = localStorage.getItem('username');
   const image = localStorage.getItem('image');
-  console.log(user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   useEffect(() => {

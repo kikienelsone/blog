@@ -9,7 +9,7 @@ export interface ArticlesDataInterfaces {
   favorited: boolean;
   favoritesCount: number;
   slug: string;
-  tagList: [string] | [null];
+  tagList: string[] | [];
   title: string;
   updatedAt: string;
 }

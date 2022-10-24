@@ -1,7 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const registerNewUser = createAsyncThunk('data/registerNewUser', async (user: any) => {
+import { UsersInterface } from '../interfaces/UsersInterface';
+import { NewPostInterface } from '../interfaces/NewPostInterface';
+
+export const registerNewUser = createAsyncThunk('data/registerNewUser', async (user: UsersInterface) => {
   const { username, email, password } = user;
+  console.log(user);
   try {
     const response = await fetch('https://blog.kata.academy/api/users', {
       method: 'POST',
@@ -27,6 +31,7 @@ export const registerNewUser = createAsyncThunk('data/registerNewUser', async (u
     return e;
   }
 });
+
 export const editPost = createAsyncThunk('post/editPost', async (slug: any) => {
   const { postSlug, postData } = slug;
   const token = localStorage.getItem('token');
@@ -51,7 +56,7 @@ export const editPost = createAsyncThunk('post/editPost', async (slug: any) => {
   }
 });
 
-export const editProfile = createAsyncThunk('post/editProfile', async (data: any) => {
+export const editProfile = createAsyncThunk('post/editProfile', async (data: UsersInterface) => {
   const token = localStorage.getItem('token');
   const { username, email, password, image } = data;
   try {
@@ -99,7 +104,7 @@ export const getCurrentUser = createAsyncThunk('user/getCurrentUser', async () =
   }
 });
 
-export const loginNewUser = createAsyncThunk('data/loginNewUser', async (user: any) => {
+export const loginNewUser = createAsyncThunk('data/loginNewUser', async (user: UsersInterface) => {
   const { email, password } = user;
 
   try {
@@ -128,7 +133,47 @@ export const loginNewUser = createAsyncThunk('data/loginNewUser', async (user: a
   }
 });
 
-export const createNewPost = createAsyncThunk('data/createNewPost', async (newPost: any) => {
+export const setLikes = createAsyncThunk('post/setLikes', async (slug: string) => {
+  const token = localStorage.getItem('token');
+  try {
+    const res = await fetch(`https://blog.kata.academy/api/articles/${slug}/favorite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error('smth');
+    }
+    const like = await res.json();
+    console.log(like);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+export const disLike = createAsyncThunk('post/disLike', async (slug: string) => {
+  const token = localStorage.getItem('token');
+  try {
+    const res = await fetch(`https://blog.kata.academy/api/articles/${slug}/favorite`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error('smth');
+    }
+    const like = await res.json();
+    console.log(like);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+export const createNewPost = createAsyncThunk('data/createNewPost', async (newPost: NewPostInterface) => {
   const { title, description, body, tagList } = newPost;
   const token = localStorage.getItem('token');
   try {
@@ -143,7 +188,7 @@ export const createNewPost = createAsyncThunk('data/createNewPost', async (newPo
           title,
           description,
           body,
-          tagList: [tagList],
+          tagList,
         },
       }),
     });
@@ -152,12 +197,13 @@ export const createNewPost = createAsyncThunk('data/createNewPost', async (newPo
     }
     const posts = await res.json();
     console.log(posts);
+    return posts;
   } catch (e) {
     console.log(e);
   }
 });
 
-export const deletePost = createAsyncThunk('data/deletePost', async (slug: any) => {
+export const deletePost = createAsyncThunk('data/deletePost', async (slug: string) => {
   const token = localStorage.getItem('token');
   try {
     const res = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
@@ -178,8 +224,13 @@ export const deletePost = createAsyncThunk('data/deletePost', async (slug: any) 
 });
 
 export const getPosts = createAsyncThunk('data/getPosts', async () => {
+  const token = localStorage.getItem('token');
   try {
-    const res = await fetch('https://blog.kata.academy/api/articles?limit=5&offset=0');
+    const res = await fetch('https://blog.kata.academy/api/articles?limit=5&offset=0', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const posts = await res.json();
     return posts.articles;
   } catch (e) {
@@ -187,12 +238,17 @@ export const getPosts = createAsyncThunk('data/getPosts', async () => {
   }
 });
 
-export const getOnePosts = createAsyncThunk('data/getOnePosts', async (slug: any) => {
+export const getOnePosts = createAsyncThunk('data/getOnePosts', async (slug: string) => {
+  const token = localStorage.getItem('token');
+
   try {
-    const res = await fetch(`https://blog.kata.academy/api/articles/${slug}`);
+    const res = await fetch(`https://blog.kata.academy/api/articles/${slug}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     const posts = await res.json();
-    console.log(posts);
     return posts.article;
   } catch (e) {
     console.log(e);

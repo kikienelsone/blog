@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { any } from 'prop-types';
 
 import { ArticlesDataInterfaces } from '../interfaces/ArticlesDataInterfaces';
+import { UsersInterface } from '../interfaces/UsersInterface';
 
 import {
   createNewPost,
@@ -14,35 +14,24 @@ import {
   loginNewUser,
   pagination,
   registerNewUser,
+  // eslint-disable-next-line import/namespace
 } from './Requests';
-
-export interface UsersInterface {
-  username: string;
-  email: string;
-  // token: string;
-  image?: string;
-}
 
 interface DataInterface {
   data: ArticlesDataInterfaces[];
   post: any;
-  deletePost: any;
   newPost: any;
-  editPost: any;
   users: UsersInterface | null;
   loading: boolean;
   isAuth: boolean;
   logout: boolean;
-  newUser: any;
-  likes: number;
+  newUser: UsersInterface | null;
   modal: boolean;
 }
 
 const initialState: DataInterface = {
   data: [],
   post: [],
-  deletePost: [],
-  editPost: [],
   newPost: [],
   users: null,
   loading: true,
@@ -50,7 +39,6 @@ const initialState: DataInterface = {
   logout: false,
   newUser: null,
   modal: false,
-  likes: 0,
 };
 
 export const dataSlice = createSlice({
@@ -71,12 +59,6 @@ export const dataSlice = createSlice({
 
     closeWindow(state) {
       state.modal = false;
-    },
-
-    like(state, action) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      state.likes = action + 1;
     },
   },
   extraReducers: (builder) => {
@@ -102,10 +84,10 @@ export const dataSlice = createSlice({
         state.newPost = action.payload;
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        state.deletePost = action.payload;
+        state.newPost = action.payload;
       })
       .addCase(editPost.fulfilled, (state, action) => {
-        state.editPost = action.payload;
+        state.newPost = action.payload;
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.users = action.payload;
@@ -116,4 +98,4 @@ export const dataSlice = createSlice({
   },
 });
 export default dataSlice.reducer;
-export const { setAuth, removeAuth, like, openWindow, closeWindow } = dataSlice.actions;
+export const { setAuth, removeAuth, openWindow, closeWindow } = dataSlice.actions;

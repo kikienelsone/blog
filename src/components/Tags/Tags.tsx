@@ -1,8 +1,8 @@
 import React from 'react';
 
-import tagsStyle from './Tags.module.scss';
+import styles from './Tags.module.scss';
 interface TagsInterface {
-  tags: [string] | [null];
+  tags: string[] | [];
 }
 export const Tags: React.FC<TagsInterface> = ({ tags }) => {
   return (
@@ -10,7 +10,7 @@ export const Tags: React.FC<TagsInterface> = ({ tags }) => {
       {tags &&
         tags.map((item) => {
           return (
-            <span className={tagsStyle.wrapper} key={Math.random()}>
+            <span className={styles.wrapper} key={Math.random()}>
               {item}
             </span>
           );

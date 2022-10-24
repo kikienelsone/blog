@@ -21,7 +21,17 @@
   margin-right: 15px;
 }
 
+.heart{
+  cursor: pointer;
+
+  font-size: 20px;
+  margin-right: 5px;
+}
+
 .likes{
-  font-size: 18px;
-  margin-right: 3px;
+  color: red;
+}
+
+.count{
+  font-size: 17px;
 }
