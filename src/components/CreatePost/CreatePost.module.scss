@@ -2,7 +2,7 @@
 .content{
   margin: auto;
   width: 938px;
-  height: 701px;
+  height: auto;
   background: white;
   box-shadow: 0 0 15px 6px rgba(34, 60, 80, 0.2);
 }
@@ -81,5 +81,6 @@
   border: none;
   border-radius: 4px;
   margin-left: 32px;
+  margin-bottom: 20px;
 margin-top: 21px;
 }

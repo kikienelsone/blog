@@ -53,7 +53,6 @@ export const createPostSchema = yup
     title: yup.string().required('This field should`t be empty'),
     description: yup.string().required('This field should`t be empty'),
     body: yup.string().required('This field should`t be empty'),
-    tagList: yup.string().required('This field should`t be empty'),
   })
   .required();
 
@@ -62,6 +61,5 @@ export const editPostSchema = yup
     title: yup.string().required('This field should`t be empty'),
     description: yup.string().required('This field should`t be empty'),
     body: yup.string().required('This field should`t be empty'),
-    tagList: yup.string().required('This field should`t be empty'),
   })
   .required();

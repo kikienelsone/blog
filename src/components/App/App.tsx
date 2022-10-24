@@ -3,7 +3,7 @@ import { Alert, Spin } from 'antd';
 import 'antd/dist/antd.css';
 import { Route, Routes } from 'react-router';
 
-import { getCurrentUser, getPosts } from '../../store/Requests';
+import { getPosts } from '../../store/Requests';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import PostList from '../PostsList/PostList';
 import { Post } from '../Post/Post';
@@ -20,7 +20,6 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getPosts());
-    // dispatch(getCurrentUser());
   }, []);
 
   const load = useAppSelector((state) => state.dataSlice.loading);

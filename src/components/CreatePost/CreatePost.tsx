@@ -10,6 +10,7 @@ import { createNewPost, getPosts } from '../../store/Requests';
 // eslint-disable-next-line import/namespace
 import { createPostSchema } from '../Schema';
 import { Tags } from '../Tags/Tags';
+import { NewPostInterface } from '../../interfaces/NewPostInterface';
 
 import styles from './CreatePost.module.scss';
 
@@ -36,8 +37,8 @@ export const CreatePost: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Post>();
-  const createPost = (data: any) => {
+  } = useForm<Post>({ resolver: yupResolver(createPostSchema) });
+  const createPost = (data: NewPostInterface) => {
     dispatch(createNewPost(data)).then(() => {
       dispatch(getPosts());
       navigate('/');
@@ -52,14 +53,15 @@ export const CreatePost: React.FC = () => {
   };
 
   const deleteTag = (tag: string) => {
-    tags.filter((item) => {
+    const a = tags.filter((item) => {
       return item !== tag;
     });
+    return setTags(a);
   };
 
   const result =
     tags &&
-    tags.map((item: any) => (
+    tags.map((item: string) => (
       <div key={Math.random() * 42}>
         <input className={styles.tags} value={item} disabled={true}></input>
 
@@ -92,17 +94,17 @@ export const CreatePost: React.FC = () => {
             <p className={styles.text}>Title</p>
             <input className={styles.inputTitle} defaultValue="" {...register('title')} />
           </label>
-          {/*{errors.title?.message}*/}
+          {errors.title?.message}
           <label>
             <p className={styles.text}>Short description</p>
             <input className={styles.description} defaultValue="" {...register('description')} />
           </label>
-          {/*{errors.description?.message}*/}
+          {errors.description?.message}
           <label>
             <p className={styles.text}>Text</p>
             <textarea className={styles.inputText} defaultValue="" {...register('body')} />
           </label>
-          {/*{errors.body?.message}*/}
+          {errors.body?.message}
         </div>
 
         <div className={styles.wrapperTags}>
@@ -111,7 +113,9 @@ export const CreatePost: React.FC = () => {
           <div>
             <div>{result}</div>
             <input value={value} onInput={(event) => inputValue(event)} className={styles.tags} />
-            <button className={styles.buttonDelete}>delete</button>
+            <button onClick={(event) => event.preventDefault()} className={styles.buttonDelete}>
+              delete
+            </button>
 
             <button
               onClick={(event) => {

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { getPosts, loginNewUser } from '../../store/Requests';
 import { removeAuth, setAuth } from '../../store/DataSlice';
 import { loginProfileSchema } from '../Schema';
+import { UsersInterface } from '../../interfaces/UsersInterface';
 
 import signin from './SignInForm.module.scss';
 
@@ -27,7 +28,7 @@ export const SignInForm: React.FC = () => {
     formState: { errors },
   } = useForm<Inputs>({ resolver: yupResolver(loginProfileSchema) });
 
-  const login = (data: any) => {
+  const login = (data: UsersInterface) => {
     dispatch(loginNewUser(data)).then(() => {
       if (token) {
         dispatch(setAuth());

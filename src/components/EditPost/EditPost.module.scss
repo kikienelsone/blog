@@ -1,7 +1,7 @@
 .wrapper{
   margin: auto;
   width: 938px;
-  height: 746px;
+  height: auto;
   background: white;
   box-shadow: 0 0 15px 6px rgba(34, 60, 80, 0.2);
 }
@@ -33,15 +33,17 @@
   height: 184px;
 
 }
-.tags{
-  width: 300px;
 
+.tags{
+  margin-left: 33px;
 }
+
 
 .inputTag{
   width: 300px;
   height: 40px;
   margin-right: 17px;
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 
@@ -75,4 +77,5 @@
   border-radius: 4px;
   margin-left: 32px;
   margin-top: 21px;
+  margin-bottom: 20px;
 }

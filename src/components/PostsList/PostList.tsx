@@ -7,13 +7,14 @@ import { Authors } from '../Authors/Authors';
 import { Tags } from '../Tags/Tags';
 // eslint-disable-next-line import/namespace
 import { disLike, getPosts, pagination, setLikes } from '../../store/Requests';
+import { ArticlesDataInterfaces } from '../../interfaces/ArticlesDataInterfaces';
 
 import styles from './PostList.module.scss';
 const PostList: React.FC = () => {
   const dispatch = useAppDispatch();
   const postList = useAppSelector((state) => state.dataSlice.data);
 
-  const like = (item: any) => {
+  const like = (item: ArticlesDataInterfaces) => {
     console.log(item);
     if (!item.favorited) {
       dispatch(setLikes(item.slug)).then(() => {

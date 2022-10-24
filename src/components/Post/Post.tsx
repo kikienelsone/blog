@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { Tags } from '../Tags/Tags';
@@ -45,7 +46,9 @@ export const Post: React.FC = () => {
             </span>
             <span className={postStyle.count}>{post.favoritesCount}</span>
             <Tags tags={post.tagList} />
-            <p className={postStyle.description}>{post.body}</p>
+            {/* eslint-disable-next-line react/no-children-prop */}
+            <ReactMarkdown children={post.body} />
+            {/*<p className={postStyle.description}>{post.body}</p>*/}
           </div>
           <div>
             {post.author && <Authors authors={post.author} time={post.createdAt} />}

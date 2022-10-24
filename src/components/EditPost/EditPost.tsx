@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import ReactMarkdown from 'react-markdown';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { editPost, getPosts } from '../../store/Requests';
@@ -30,7 +31,7 @@ export const EditPost: React.FC = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Post>();
+  } = useForm<Post>({ resolver: yupResolver(editPostSchema) });
 
   const editCurrentPost = (data: any) => {
     dispatch(editPost({ postSlug: posts.slug, postData: data })).then(() => {
@@ -49,13 +50,28 @@ export const EditPost: React.FC = () => {
     setTags([...tags, value]);
     setValue('');
   };
+
+  const deleteTag = (tag: string) => {
+    const a = tags.filter((item: string) => {
+      return item !== tag;
+    });
+    return setTags(a);
+  };
   const result =
     tags &&
     tags.map((item: string) => (
       <div key={Math.random() * 42}>
-        <input className={styles.tags} value={item} disabled={true}></input>
+        <input className={styles.inputTag} value={item} disabled={true}></input>
 
-        <button className={styles.buttonDelete}>delete</button>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            deleteTag(item);
+          }}
+          className={styles.buttonDelete}
+        >
+          delete
+        </button>
       </div>
     ));
 
@@ -93,21 +109,19 @@ export const EditPost: React.FC = () => {
             />
           </label>
           {errors.description?.message}
-
           <label>
             <p className={styles.text}>Text</p>
             <textarea value={input.body} className={styles.inputText} {...register('body')} />
           </label>
+
           {errors.body?.message}
         </section>
 
         <section className={styles.tags}>
-          <div>
-            <span className={styles.text}>Tags</span>
-          </div>
+          <p className={styles.text}>Tags</p>
           <div>{result}</div>
 
-          <input onInput={(event) => inputValue(event)} value={value} className={styles.tags} />
+          <input onInput={(event) => inputValue(event)} value={value} className={styles.inputTag} />
 
           <button
             onClick={(event) => {

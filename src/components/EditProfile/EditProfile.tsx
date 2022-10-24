@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { editProfile, getPosts } from '../../store/Requests';
 import { editProfileSchema } from '../Schema';
+import { UsersInterface } from '../../interfaces/UsersInterface';
 
 import profile from './EditProfile.module.scss';
 type Profile = {
@@ -25,7 +26,7 @@ export const EditProfile: React.FC = () => {
     formState: { errors },
   } = useForm<Profile>({ resolver: yupResolver(editProfileSchema) });
 
-  const update = (data: any) => {
+  const update = (data: UsersInterface) => {
     dispatch(editProfile(data)).then(() => {
       dispatch(getPosts());
       navigate('/');

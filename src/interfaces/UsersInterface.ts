@@ -1,8 +1,8 @@
 export interface UsersInterface {
-  username: string;
+  username?: string;
   email: string;
   token?: string;
   image?: string;
   password: number | string;
-  repeat: number | string;
+  repeat?: number | string;
 }
